@@ -37,15 +37,20 @@ type
     HereLabel: TLabel;
     HereTrackBar: TTrackBar;
     ProgressBar: TProgressBar;
-    Chart3D: TChart;
-    Series1: TLineSeries;
-    Series2: TLineSeries;
     Chart2DLeft: TChart;
     Chart2DBottom: TChart;
     Chart2DTop: TChart;
     Chart2DRight: TChart;
     ChartDisp: TChart;
     Series3: TLineSeries;
+    Chart3D: TChart;
+    Series1: TBarSeries;
+    Series2: TBarSeries;
+    Series4: TBarSeries;
+    LabelTop: TLabel;
+    LabelRight: TLabel;
+    LabelBottom: TLabel;
+    LabelLeft: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure TrackBarChange(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -194,6 +199,19 @@ begin
   ChartDisp.Left:=Chart2Dtop.Left;
   ChartDisp.Width:=Chart2DTop.Width;
   ChartDisp.Height:=Chart2Dleft.Height;
+
+  labeltop.Left:=chart2dtop.Left;
+  labeltop.Top:=chart2dleft.Top;
+  labeltop.Width:=chart2dTop.Width;
+  labelRight.Left:=labeltop.Left;
+  labelright.Top:=labeltop.Top+labeltop.Height;
+  labelRight.Width:=labelTop.Width;
+  labelbottom.Left:=labeltop.Left;
+  labelbottom.Top:=labelright.Top+labelright.Height;
+  labelBottom.Width:=labelTop.Width;
+  labelleft.Left:=labeltop.Left;
+  labelleft.Top:=labelbottom.Top+labelbottom.Height;
+  labelLeft.Width:=labelTop.Width;
 end;
 
 function TForm1.GetActiveProcessAmount():integer;
@@ -282,15 +300,13 @@ begin
   statusbar.Panels[0].Text:='Stopping...';
   while GetActiveProcessAmount>0 do application.ProcessMessages;
   simulatebutton.Enabled:=true;
-  RESsection.Enter;
-  //for i:=0 to FieldHeight - 1 do
-  //  matrix[i]:=nil;
-  //matrix:=nil;
-  Visualize;
-  SetLength(matrix, 0, 0);
-  //matrix.resize(0,0);
-  RESsection.Leave;
+  testamount:=progressbar.Position;
   progressbar.Position:=0;
+
+  Visualize;
+  RESsection.Enter;
+  SetLength(matrix, 0, 0);
+  RESsection.Leave;
 
   simulatebutton.Tag := 0;
   simulatebutton.Caption := 'Simulate';
@@ -319,38 +335,70 @@ procedure TForm1.Visualize;
 var
 M, D: Real;
 i, j, n: integer;
+s: TBarSeries;
 begin
+if testamount = 0 then exit;
 chart3D.FreeAllSeries;
 for i:=0 to fieldHeight-1 do
 begin
-  chart3d.AddSeries(TLineSeries.Create(Self));
+  s := TBarSeries.Create(Self);
+  s.MultiBar := mbNone;
+  s.Marks.Visible := false;
+  chart3d.AddSeries(s);
   for j:=0 to fieldWidth-1 do
-    chart3d.Series[i].AddXY(j, matrix[i,j]);
+    chart3d.Series[i].AddXY(j, matrix[i,j] / TestAmount);
 end;
 
 Chart2DTop.FreeAllSeries;
-chart2DTop.AddSeries(TLineSeries.Create(Self));
+chart2DTop.AddSeries(TBarSeries.Create(Self));
+(chart2dtop.Series[0] as TBarSeries).Marks.Visible:=false;
+n:=0;
+for i:=0 to fieldWidth - 1 do
+  n:=n+ matrix[0,i];
 for i:=0 to fieldWidth-1 do
-  chart2DTop.Series[0].AddXY(i, matrix[0,i]);
+  chart2DTop.Series[0].AddXY(i, matrix[0,i] / n);
+m:=n/testamount;
+d:=n*(testamount-n)/(testamount*testamount);
+labeltop.Caption:='Top: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
 
 Chart2DRight.FreeAllSeries;
-chart2DRight.AddSeries(TLineSeries.Create(Self));
+chart2DRight.AddSeries(TBarSeries.Create(Self));
+(chart2dRight.Series[0] as TBarSeries).Marks.Visible:=false;
+n:=0;
 for i:=0 to fieldHeight-1 do
-  chart2dRight.Series[0].AddXY(i, matrix[i,FieldWidth-1]);
+  n:=n+ matrix[i,FieldWidth-1];
+for i:=0 to fieldHeight-1 do
+  chart2dRight.Series[0].AddXY(i, matrix[i,FieldWidth-1]/n);
+m:=n/(testamount*1.0);
+d:=n*(testamount-n)/(testamount*testamount);
+labelright.Caption:='Right: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
 
 Chart2DBottom.FreeAllSeries;
-chart2DBottom.AddSeries(TLineSeries.Create(Self));
+chart2DBottom.AddSeries(TBarSeries.Create(Self));
+(chart2dBottom.Series[0] as TBarSeries).Marks.Visible:=false;
+n:=0;
 for i:=0 to fieldWidth-1 do
-  chart2DBottom.Series[0].AddXY(i, matrix[FieldHeight-1,i]);
+  n:=n+matrix[FieldHeight-1,i];
+for i:=0 to fieldWidth-1 do
+  chart2DBottom.Series[0].AddXY(i, matrix[FieldHeight-1,i]/n);
+m:=n/(testamount*1.0);
+d:=n*(testamount-n)/(testamount*testamount);
+labelbottom.Caption:='Bottom: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
 
 Chart2DLeft.FreeAllSeries;
-chart2DLeft.AddSeries(TLineSeries.Create(Self));
+chart2DLeft.AddSeries(TBarSeries.Create(Self));
+(chart2dLeft.Series[0] as TBarSeries).Marks.Visible:=false;
+n:=0;
 for i:=0 to fieldHeight-1 do
-  chart2dLeft.Series[0].AddXY(i, matrix[i,0]);
+  n:=n+ matrix[i,0];
+for i:=0 to fieldHeight-1 do
+  chart2dLeft.Series[0].AddXY(i, matrix[i,0]/n);
+m:=n/(testamount*1.0);
+d:=n*(testamount-n)/(testamount*testamount);
+labelleft.Caption:='Left: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
 
 ChartDisp.FreeAllSeries;
-ChartDisp.AddSeries(TBarSeries.Create(self));
-ChartDisp.Series[0].Title:='Top';
+
 m:=0;
 d:=0;
 n:=0;
@@ -360,12 +408,15 @@ begin
   d := d + matrix[0,i]*i*i;
   n:= n+matrix[0,i];
 end;
-m := m / n;
-d := d / n - m*m;
-ChartDisp.series[0].Add(d);
+if n>0 then
+begin
+  ChartDisp.AddSeries(TBarSeries.Create(self));
+  ChartDisp.Series[ChartDisp.SeriesCount-1].Title:='Top';
+  m := m / n;
+  d := d / n - m*m;
+  ChartDisp.series[ChartDisp.SeriesCount-1].Add(d);
+end;
 
-ChartDisp.AddSeries(TBarSeries.Create(self));
-ChartDisp.Series[1].Title:='Right';
 m:=0;
 d:=0;
 n:=0;
@@ -375,12 +426,15 @@ begin
   d := d + matrix[i, FieldWidth-1]*i*i;
   n := n + matrix[i, FieldWidth-1];
 end;
-m := m / n;
-d := d / n - m*m;
-ChartDisp.series[1].Add(d);
+if n>0 then
+begin
+  ChartDisp.AddSeries(TBarSeries.Create(self));
+  ChartDisp.Series[ChartDisp.SeriesCount-1].Title:='Right';
+  m := m / n;
+  d := d / n - m*m;
+  ChartDisp.series[ChartDisp.SeriesCount-1].Add(d);
+end;
 
-ChartDisp.AddSeries(TBarSeries.Create(self));
-ChartDisp.Series[2].Title:='Bottom';
 m:=0;
 d:=0;
 n:=0;
@@ -390,12 +444,15 @@ begin
   d := d + matrix[FieldHeight-1,i]*i*i;
   n:= n+matrix[FieldHeight-1,i];
 end;
-m := m / n;
-d := d / n - m*m;
-ChartDisp.series[2].Add(d);
+if n>0 then
+begin
+  ChartDisp.AddSeries(TBarSeries.Create(self));
+  ChartDisp.Series[ChartDisp.SeriesCount-1].Title:='Bottom';
+  m := m / n;
+  d := d / n - m*m;
+  ChartDisp.series[ChartDisp.SeriesCount-1].Add(d);
+end;
 
-ChartDisp.AddSeries(TBarSeries.Create(self));
-ChartDisp.Series[3].Title:='Left';
 m:=0;
 d:=0;
 n:=0;
@@ -405,9 +462,14 @@ begin
   d := d + matrix[i, 0]*i*i;
   n := n + matrix[i, 0];
 end;
-m := m / n;
-d := d / n - m*m;
-ChartDisp.series[3].Add(d);
+if n>0 then
+begin
+  ChartDisp.AddSeries(TBarSeries.Create(self));
+  ChartDisp.Series[ChartDisp.SeriesCount-1].Title:='Left';
+  m := m / n;
+  d := d / n - m*m;
+  ChartDisp.series[ChartDisp.SeriesCount-1].Add(d);
+end;
 
 end;
 

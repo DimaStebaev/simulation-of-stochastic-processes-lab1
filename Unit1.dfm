@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 197
-  Top = 99
+  Left = 143
+  Top = 111
   Width = 871
   Height = 693
   Caption = 'Form1'
@@ -20,6 +20,34 @@ object Form1: TForm1
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
+  object LabelTop: TLabel
+    Left = 672
+    Top = 496
+    Width = 22
+    Height = 13
+    Caption = 'Top:'
+  end
+  object LabelRight: TLabel
+    Left = 664
+    Top = 520
+    Width = 28
+    Height = 13
+    Caption = 'Right:'
+  end
+  object LabelBottom: TLabel
+    Left = 680
+    Top = 544
+    Width = 36
+    Height = 13
+    Caption = 'Bottom:'
+  end
+  object LabelLeft: TLabel
+    Left = 680
+    Top = 568
+    Width = 21
+    Height = 13
+    Caption = 'Left:'
+  end
   object StatusBar: TStatusBar
     Left = 0
     Top = 640
@@ -318,50 +346,6 @@ object Form1: TForm1
     Height = 17
     TabOrder = 5
   end
-  object Chart3D: TChart
-    Left = 200
-    Top = 8
-    Width = 449
-    Height = 361
-    BackWall.Brush.Color = clWhite
-    BackWall.Brush.Style = bsClear
-    Title.Text.Strings = (
-      'Distribution')
-    Legend.Visible = False
-    TabOrder = 6
-    object Series1: TLineSeries
-      Marks.ArrowLength = 8
-      Marks.Visible = False
-      SeriesColor = clRed
-      Pointer.InflateMargins = True
-      Pointer.Style = psRectangle
-      Pointer.Visible = False
-      XValues.DateTime = False
-      XValues.Name = 'X'
-      XValues.Multiplier = 1.000000000000000000
-      XValues.Order = loAscending
-      YValues.DateTime = False
-      YValues.Name = 'Y'
-      YValues.Multiplier = 1.000000000000000000
-      YValues.Order = loNone
-    end
-    object Series2: TLineSeries
-      Marks.ArrowLength = 8
-      Marks.Visible = False
-      SeriesColor = clGreen
-      Pointer.InflateMargins = True
-      Pointer.Style = psRectangle
-      Pointer.Visible = False
-      XValues.DateTime = False
-      XValues.Name = 'X'
-      XValues.Multiplier = 1.000000000000000000
-      XValues.Order = loAscending
-      YValues.DateTime = False
-      YValues.Name = 'Y'
-      YValues.Multiplier = 1.000000000000000000
-      YValues.Order = loNone
-    end
-  end
   object Chart2DLeft: TChart
     Left = 208
     Top = 376
@@ -373,7 +357,7 @@ object Form1: TForm1
       'Left border distribution')
     Legend.Visible = False
     View3D = False
-    TabOrder = 7
+    TabOrder = 6
   end
   object Chart2DBottom: TChart
     Left = 416
@@ -386,7 +370,7 @@ object Form1: TForm1
       'Bottom border distribution')
     Legend.Visible = False
     View3D = False
-    TabOrder = 8
+    TabOrder = 7
   end
   object Chart2DTop: TChart
     Left = 656
@@ -399,7 +383,7 @@ object Form1: TForm1
       'Top border distribution')
     Legend.Visible = False
     View3D = False
-    TabOrder = 9
+    TabOrder = 8
     object Series3: TLineSeries
       Marks.ArrowLength = 8
       Marks.Visible = False
@@ -428,18 +412,74 @@ object Form1: TForm1
       'Right border distribution')
     Legend.Visible = False
     View3D = False
-    TabOrder = 10
+    TabOrder = 9
   end
   object ChartDisp: TChart
     Left = 656
     Top = 376
-    Width = 201
-    Height = 257
+    Width = 161
+    Height = 89
     BackWall.Brush.Color = clWhite
     BackWall.Brush.Style = bsClear
     Title.Text.Strings = (
       'Dispersion')
+    TabOrder = 10
+    Visible = False
+  end
+  object Chart3D: TChart
+    Left = 200
+    Top = 8
+    Width = 449
+    Height = 361
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Distribution'
+      '')
+    Legend.Visible = False
     TabOrder = 11
+    object Series1: TBarSeries
+      Marks.ArrowLength = 20
+      Marks.Visible = False
+      SeriesColor = clRed
+      MultiBar = mbNone
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
+    object Series2: TBarSeries
+      Marks.ArrowLength = 20
+      Marks.Visible = False
+      SeriesColor = clGreen
+      MultiBar = mbNone
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
+    object Series4: TBarSeries
+      Marks.ArrowLength = 20
+      Marks.Visible = False
+      SeriesColor = clYellow
+      MultiBar = mbNone
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Bar'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
   end
   object XPManifest1: TXPManifest
     Left = 824
