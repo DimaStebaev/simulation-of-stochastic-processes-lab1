@@ -280,7 +280,7 @@ begin
         progressbar.Position := ready;
         //statusbar.Panels[0].Text:='Working... ('+inttostr(ready)+'/'+inttostr(testamount)+')';
         application.ProcessMessages;
-      until GetActiveProcessAmount<5*integer(s.dwNumberOfProcessors);
+      until GetActiveProcessAmount<10*integer(s.dwNumberOfProcessors);
 
       sim := TSim.Create(true);
       sim.FreeOnTerminate:=true;
