@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 241
-  Top = 199
-  Width = 872
+  Left = 197
+  Top = 99
+  Width = 871
   Height = 693
   Caption = 'Form1'
   Color = clBtnFace
@@ -13,37 +13,17 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
-  object grid: TStringGrid
-    Left = 200
-    Top = 0
-    Width = 662
-    Height = 640
-    ColCount = 10
-    DefaultColWidth = 25
-    DefaultRowHeight = 25
-    FixedCols = 0
-    RowCount = 10
-    FixedRows = 0
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    Options = [goVertLine, goHorzLine]
-    ParentFont = False
-    TabOrder = 0
-    OnDrawCell = gridDrawCell
-  end
   object StatusBar: TStatusBar
     Left = 0
     Top = 640
-    Width = 864
+    Width = 863
     Height = 19
     Panels = <
       item
@@ -61,7 +41,7 @@ object Form1: TForm1
     Width = 185
     Height = 81
     Caption = 'Field'
-    TabOrder = 2
+    TabOrder = 1
     object Label1: TLabel
       Left = 33
       Top = 20
@@ -95,7 +75,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 0
       Text = '10'
-      OnChange = HeightEditChange
     end
     object WidthEdit: TEdit
       Left = 72
@@ -104,7 +83,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 1
       Text = '10'
-      OnChange = WidthEditChange
     end
   end
   object GroupBox2: TGroupBox
@@ -113,7 +91,7 @@ object Form1: TForm1
     Width = 185
     Height = 73
     Caption = 'Initial point'
-    TabOrder = 3
+    TabOrder = 2
     object Label3: TLabel
       Left = 38
       Top = 18
@@ -147,7 +125,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 0
       Text = '5'
-      OnChange = TopEditChange
     end
     object LeftEdit: TEdit
       Left = 67
@@ -156,7 +133,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 1
       Text = '5'
-      OnChange = LeftEditChange
     end
   end
   object GroupBox3: TGroupBox
@@ -165,7 +141,7 @@ object Form1: TForm1
     Width = 185
     Height = 345
     Caption = 'Probabilities'
-    TabOrder = 4
+    TabOrder = 3
     object LeftLabel: TLabel
       Left = 12
       Top = 24
@@ -303,7 +279,7 @@ object Form1: TForm1
     Width = 185
     Height = 105
     Caption = 'Simulation'
-    TabOrder = 5
+    TabOrder = 4
     object Label9: TLabel
       Left = 4
       Top = 32
@@ -324,7 +300,6 @@ object Form1: TForm1
       Height = 21
       TabOrder = 0
       Text = '1000'
-      OnChange = NumberEditChange
     end
     object SimulateButton: TButton
       Left = 55
@@ -337,11 +312,134 @@ object Form1: TForm1
     end
   end
   object ProgressBar: TProgressBar
-    Left = 544
-    Top = 576
+    Left = 696
+    Top = 616
     Width = 150
     Height = 17
+    TabOrder = 5
+  end
+  object Chart3D: TChart
+    Left = 200
+    Top = 8
+    Width = 449
+    Height = 361
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Distribution')
+    Legend.Visible = False
     TabOrder = 6
+    object Series1: TLineSeries
+      Marks.ArrowLength = 8
+      Marks.Visible = False
+      SeriesColor = clRed
+      Pointer.InflateMargins = True
+      Pointer.Style = psRectangle
+      Pointer.Visible = False
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Y'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
+    object Series2: TLineSeries
+      Marks.ArrowLength = 8
+      Marks.Visible = False
+      SeriesColor = clGreen
+      Pointer.InflateMargins = True
+      Pointer.Style = psRectangle
+      Pointer.Visible = False
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Y'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
+  end
+  object Chart2DLeft: TChart
+    Left = 208
+    Top = 376
+    Width = 201
+    Height = 250
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Left border distribution')
+    Legend.Visible = False
+    View3D = False
+    TabOrder = 7
+  end
+  object Chart2DBottom: TChart
+    Left = 416
+    Top = 376
+    Width = 233
+    Height = 257
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Bottom border distribution')
+    Legend.Visible = False
+    View3D = False
+    TabOrder = 8
+  end
+  object Chart2DTop: TChart
+    Left = 656
+    Top = 8
+    Width = 201
+    Height = 169
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Top border distribution')
+    Legend.Visible = False
+    View3D = False
+    TabOrder = 9
+    object Series3: TLineSeries
+      Marks.ArrowLength = 8
+      Marks.Visible = False
+      SeriesColor = clRed
+      Pointer.InflateMargins = True
+      Pointer.Style = psRectangle
+      Pointer.Visible = False
+      XValues.DateTime = False
+      XValues.Name = 'X'
+      XValues.Multiplier = 1.000000000000000000
+      XValues.Order = loAscending
+      YValues.DateTime = False
+      YValues.Name = 'Y'
+      YValues.Multiplier = 1.000000000000000000
+      YValues.Order = loNone
+    end
+  end
+  object Chart2DRight: TChart
+    Left = 656
+    Top = 184
+    Width = 201
+    Height = 185
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Right border distribution')
+    Legend.Visible = False
+    View3D = False
+    TabOrder = 10
+  end
+  object ChartDisp: TChart
+    Left = 656
+    Top = 376
+    Width = 201
+    Height = 257
+    BackWall.Brush.Color = clWhite
+    BackWall.Brush.Style = bsClear
+    Title.Text.Strings = (
+      'Dispersion')
+    TabOrder = 11
   end
   object XPManifest1: TXPManifest
     Left = 824

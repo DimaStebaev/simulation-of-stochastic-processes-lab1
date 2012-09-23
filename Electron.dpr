@@ -2,9 +2,12 @@ program Electron;
 
 uses
   Forms,
-  Unit1 in 'Unit1.pas' {Form1};
+  Unit1 in 'Unit1.pas' {Form1},
+  logic in 'logic.pas',
+  globals in 'globals.pas';
 
 {$R *.res}
+//{$R+}
 
 begin
   Application.Initialize;
