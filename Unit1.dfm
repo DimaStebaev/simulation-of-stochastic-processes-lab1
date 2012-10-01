@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 143
-  Top = 111
+  Left = 193
+  Top = 113
   Width = 871
   Height = 693
   Caption = 'Form1'
@@ -21,32 +21,39 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object LabelTop: TLabel
-    Left = 672
-    Top = 496
+    Left = 664
+    Top = 480
     Width = 22
     Height = 13
     Caption = 'Top:'
   end
   object LabelRight: TLabel
     Left = 664
-    Top = 520
+    Top = 496
     Width = 28
     Height = 13
     Caption = 'Right:'
   end
   object LabelBottom: TLabel
-    Left = 680
-    Top = 544
+    Left = 664
+    Top = 520
     Width = 36
     Height = 13
     Caption = 'Bottom:'
   end
   object LabelLeft: TLabel
-    Left = 680
-    Top = 568
+    Left = 664
+    Top = 536
     Width = 21
     Height = 13
     Caption = 'Left:'
+  end
+  object LabelInside: TLabel
+    Left = 672
+    Top = 568
+    Width = 31
+    Height = 13
+    Caption = 'Inside:'
   end
   object StatusBar: TStatusBar
     Left = 0

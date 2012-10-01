@@ -51,6 +51,7 @@ type
     LabelRight: TLabel;
     LabelBottom: TLabel;
     LabelLeft: TLabel;
+    LabelInside: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure TrackBarChange(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -212,6 +213,9 @@ begin
   labelleft.Left:=labeltop.Left;
   labelleft.Top:=labelbottom.Top+labelbottom.Height;
   labelLeft.Width:=labelTop.Width;
+  labelinside.Top:=labelleft.Top+labelleft.Height;
+  labelinside.Left:=labelTop.left;
+  labelinside.Width:=labelTop.Width;
 end;
 
 function TForm1.GetActiveProcessAmount():integer;
@@ -334,20 +338,61 @@ end;
 procedure TForm1.Visualize;
 var
 M, D: Real;
-i, j, n: integer;
+i, j, n, kw, kh, graphWidth, graphHeight: integer;
 s: TBarSeries;
+draw: array of array of integer;
+dw, dh: integer;
 begin
+graphwidth := 13;
+graphHeight := 13;
+
+kw:=1;
+kh:=1;
+while fieldWidth / kw > graphWidth do kw:=kw+1;
+while fieldHeight / kh > graphHeight do kh:=kh+1;
+dw:= fieldwidth div kw;
+if kw*dw < fieldwidth then dw:=dw+1;
+dh:= fieldheight div kh;
+if kh*dh < fieldHeight then dh:=dh+1;
+SetLength(draw, dh, dw);
+for i:=0 to dh - 1 do
+  for j:=0 to dw -1 do
+    draw[i,j] := 0;
+for i:=1 to fieldheight-2 do
+  for j:=1 to fieldwidth -2 do
+    draw[i div kh, j div kw] := draw[i div kh, j div kw] + matrix[i,j];
+
 if testamount = 0 then exit;
 chart3D.FreeAllSeries;
-for i:=0 to fieldHeight-1 do
+for i:=0 to dh-1 do
 begin
   s := TBarSeries.Create(Self);
   s.MultiBar := mbNone;
   s.Marks.Visible := false;
   chart3d.AddSeries(s);
-  for j:=0 to fieldWidth-1 do
-    chart3d.Series[i].AddXY(j, matrix[i,j] / TestAmount);
+  for j:=0 to dw-1 do
+    chart3d.Series[i].AddXY(j*kw, draw[i,j] / TestAmount);
 end;
+
+n:=0;
+for i:=1 to fieldheight-2 do
+  for j:=1 to fieldwidth -2 do
+    n:=n+matrix[i,j];
+if n>0 then
+begin
+  m:=n/testamount;
+  d:=n*(testamount-n)/(testamount*testamount);
+  labelinside.Caption:='Inside: '+FloatToStr(m)+' ~ '+floattostr(1/sqrt(n));
+end else labelinside.Caption:='Inside: none';
+
+
+for i:=0 to dh - 1 do
+  for j:=0 to dw -1 do
+    draw[i,j] := 0;
+for i:=0 to fieldheight-1 do
+  for j:=0 to fieldwidth -1 do
+    if (i<1) or (i> fieldheight-2) or (j<1) or (j>fieldwidth -2) then
+    draw[i div kh, j div kw] := draw[i div kh, j div kw] + matrix[i,j];
 
 Chart2DTop.FreeAllSeries;
 chart2DTop.AddSeries(TBarSeries.Create(Self));
@@ -355,11 +400,14 @@ chart2DTop.AddSeries(TBarSeries.Create(Self));
 n:=0;
 for i:=0 to fieldWidth - 1 do
   n:=n+ matrix[0,i];
-for i:=0 to fieldWidth-1 do
-  chart2DTop.Series[0].AddXY(i, matrix[0,i] / n);
-m:=n/testamount;
-d:=n*(testamount-n)/(testamount*testamount);
-labeltop.Caption:='Top: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
+if n>0 then
+begin
+  for i:=0 to dw-1 do
+    chart2DTop.Series[0].AddXY(i*kw, draw[0,i] / n);
+  m:=n/testamount;
+  d:=n*(testamount-n)/(testamount*testamount);
+  labeltop.Caption:='Top: '+FloatToStr(m)+' ~ '+floattostr(1/sqrt(n));
+end else labeltop.Caption:='Top: none';
 
 Chart2DRight.FreeAllSeries;
 chart2DRight.AddSeries(TBarSeries.Create(Self));
@@ -367,11 +415,14 @@ chart2DRight.AddSeries(TBarSeries.Create(Self));
 n:=0;
 for i:=0 to fieldHeight-1 do
   n:=n+ matrix[i,FieldWidth-1];
-for i:=0 to fieldHeight-1 do
-  chart2dRight.Series[0].AddXY(i, matrix[i,FieldWidth-1]/n);
-m:=n/(testamount*1.0);
-d:=n*(testamount-n)/(testamount*testamount);
-labelright.Caption:='Right: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
+if n>0 then
+begin
+  for i:=0 to dh-1 do
+    chart2dRight.Series[0].AddXY(i*kh, draw[i,dw-1]/n);
+  m:=n/(testamount*1.0);
+  d:=n*(testamount-n)/(testamount*testamount);
+  labelright.Caption:='Right: '+FloatToStr(m)+' ~ '+floattostr(1/sqrt(n));
+end  else labelright.Caption:='Right: none';
 
 Chart2DBottom.FreeAllSeries;
 chart2DBottom.AddSeries(TBarSeries.Create(Self));
@@ -379,11 +430,14 @@ chart2DBottom.AddSeries(TBarSeries.Create(Self));
 n:=0;
 for i:=0 to fieldWidth-1 do
   n:=n+matrix[FieldHeight-1,i];
-for i:=0 to fieldWidth-1 do
-  chart2DBottom.Series[0].AddXY(i, matrix[FieldHeight-1,i]/n);
-m:=n/(testamount*1.0);
-d:=n*(testamount-n)/(testamount*testamount);
-labelbottom.Caption:='Bottom: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
+if n>0 then
+begin
+  for i:=0 to dw-1 do
+    chart2DBottom.Series[0].AddXY(i*kw, draw[dh-1,i]/n);
+  m:=n/(testamount*1.0);
+  d:=n*(testamount-n)/(testamount*testamount);
+  labelbottom.Caption:='Bottom: '+FloatToStr(m)+' ~ '+floattostr(1/sqrt(n));
+end  else labelright.Caption:='Bottom: none';
 
 Chart2DLeft.FreeAllSeries;
 chart2DLeft.AddSeries(TBarSeries.Create(Self));
@@ -391,11 +445,14 @@ chart2DLeft.AddSeries(TBarSeries.Create(Self));
 n:=0;
 for i:=0 to fieldHeight-1 do
   n:=n+ matrix[i,0];
-for i:=0 to fieldHeight-1 do
-  chart2dLeft.Series[0].AddXY(i, matrix[i,0]/n);
-m:=n/(testamount*1.0);
-d:=n*(testamount-n)/(testamount*testamount);
-labelleft.Caption:='Left: '+FloatToStr(m)+' ~ '+floattostr(3*sqrt(d));
+if n>0 then
+begin
+  for i:=0 to dh-1 do
+    chart2dLeft.Series[0].AddXY(i*dw, draw[i,0]/n);
+  m:=n/(testamount*1.0);
+  d:=n*(testamount-n)/(testamount*testamount);
+  labelleft.Caption:='Left: '+FloatToStr(m)+' ~ '+floattostr(1/sqrt(n));
+end  else labelright.Caption:='Left: none';
 
 ChartDisp.FreeAllSeries;
 
